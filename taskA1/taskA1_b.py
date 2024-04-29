@@ -13,7 +13,7 @@ print(labels)
 
 tokenizer = get_tokenizer('basic_english')
 text = data['text'].tolist()
-# tokenized_text = [tokenizer(sentence) for sentence in text]
+
 tokenized_text = [' '.join(tokenizer(sentence)) for sentence in text]
 
 # Initialize TfidfVectorizer with max_features
@@ -37,9 +37,6 @@ max_date_max = data['date_max'].max()
 
 data['date_min_normalized'] = (data['date_min'] - min_date_min) / (max_date_min - min_date_min)
 data['date_max_normalized'] = (data['date_max'] - min_date_max) / (max_date_max - min_date_max)
-
-# Drop the original date_min and date_max columns if needed
-# data.drop(['date_min', 'date_max'], axis=1, inplace=True)
 
 # Print the DataFrame with normalized date_min and date_max columns
 print(data)

@@ -12,7 +12,7 @@ print(labels)
 
 tokenizer = get_tokenizer('basic_english')
 text = data['text'].tolist()
-# tokenized_text = [tokenizer(sentence) for sentence in text]
+
 tokenized_text = [' '.join(tokenizer(sentence)) for sentence in text]
 
 # Initialize TfidfVectorizer with max_features

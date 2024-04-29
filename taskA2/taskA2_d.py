@@ -8,6 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import KFold
 import torch.nn as nn
 import torch.optim as optim
+import matplotlib.pyplot as plt
+
 
 # Define the neural network model
 class NeuralNet(nn.Module):
@@ -54,7 +56,7 @@ y = torch.tensor(data[['date_min_normalized']].values, dtype=torch.float)
 # Define hyperparameters
 learning_rate = 0.001
 epochs = 1000
-hidden_units = 600  # Number of neurons in the hidden layer
+hidden_units = 1200  # Number of neurons in the hidden layer
 input_units = max_features
 output_units = 1  # date_min_normalized 
 
@@ -69,6 +71,7 @@ n_splits = 5
 # Initialize the KFold cross-validator
 kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
 
+loss_values = []
 # Iterate over the folds
 for fold, (train_index, test_index) in enumerate(kf.split(X)):
     # Get the training and test data for this fold
@@ -82,6 +85,9 @@ for fold, (train_index, test_index) in enumerate(kf.split(X)):
 
         # Calculate RMSE loss
         loss = torch.sqrt(criterion(outputs, y_train))
+        
+        # Store the loss value
+        loss_values.append(loss.item())
         
         # Backward pass and optimization
         optimizer.zero_grad()
@@ -98,3 +104,11 @@ for fold, (train_index, test_index) in enumerate(kf.split(X)):
         test_loss = torch.sqrt(criterion(test_outputs, y_test))
         test_rmse = test_loss
         print(f'Fold {fold+1}, Test RMSE: {test_rmse.item():.4f}')
+
+
+# Plot the loss values
+plt.plot(loss_values)
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Loss per Epoch')
+plt.show()
